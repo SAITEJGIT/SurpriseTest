@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  authservice:
+    build:
+      context: ./backend/authService
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+
+  streamingservice:
+    build:
+      context: ./backend/streamingService
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - authservice
+      - streamingservice
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: saiteja982610kommineni
+      MONGO_INITDB_ROOT_PASSWORD: 4AK9WpDrwQEmxkzL@cluster01
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: saiteja982610kommineni
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 4AK9WpDrwQEmxkzL@cluster01
+      ME_CONFIG_MONGODB_URL: mongodb+srv://saiteja982610kommineni:4AK9WpDrwQEmxkzL@cluster01.wvwhezv.mongodb.net/EXAM
+      ME_CONFIG_BASICAUTH: 'false'
